@@ -1,0 +1,531 @@
+    module Display
+PAGE_BITMAP = #06
+PAGE_ATTR   = #3a
+
+    macro StartDrawing
+    push af : ld a, PAGE_BITMAP : call Memory.setPage : pop af
+    endm
+
+FSM_PUTC = 0
+FSM_ESC = 1
+FSM_LOADX = 2
+FSM_LOADY = 3
+FSM_LOADC = 4
+FSM_LOADB = 5
+
+
+;; Should be called once
+init:
+    ld a, #ff : out (#fe), a
+
+    ld a, PAGE_OFFLOAD : call Memory.setPage
+;; Calcing table
+    ld de, display_offset_table
+    ld hl, #4000 
+    ld a, l : ld (de), a : inc de 
+    ld a, h : ld (de), a : inc de 
+    ld b, 239
+.loop
+    inc h 
+    ld a, h : and 7
+    jr nz, .calced
+    ld a, l
+    add #20
+    ld l, a
+    jr c, .calced
+    ld a, h
+    sub 8
+    ld h, a
+.calced
+    ld a, l : ld (de), a : inc de 
+    ld a, h : ld (de), a : inc de 
+    djnz .loop
+    
+
+    ld a, PAGE_BITMAP : call Memory.setPage
+    call cls
+
+    ret
+
+cls:
+    xor a
+    ld hl, #4000
+    ld (hl), a
+    ld de, #4001
+    ld bc, 16383
+    ldir
+    ld (coords), bc
+
+    ld a, #3A : call Memory.setPage
+    ld a, (attr)
+
+    ;; ATTRS
+    ld hl, #4000
+    ld (hl), a
+    ld de, #4001
+    ld bc, 16383
+    ldir
+
+exit:   
+    call xor_cursor
+    ld a, PAGE_USER : call Memory.setPage
+    ret
+
+
+putc:
+    ld c, a
+    push bc
+    call xor_cursor
+    pop bc    
+    ld a, (putc_fsm) 
+    ld h, 0 : ld l, a
+    add hl, hl 
+    ld de, put_fsc_table 
+    add hl, de
+    ld e, (hl)
+    inc hl 
+    ld d, (hl)
+    ld (.addr), de
+.addr = $ + 1
+    call 1234
+
+    jp exit
+
+
+_esc:
+
+    ld a, c
+    cp '=' : jr z, .load_coords
+    cp 'c' : jr z, .load_col
+    cp 'b' : jr z, .load_back
+    
+;; Not parsed ESC code
+    xor a : ld (putc_fsm), a
+    ret
+.load_col
+    ld a, FSM_LOADC : ld (putc_fsm), a
+    ret
+.load_back
+    ld a, FSM_LOADB : ld (putc_fsm), a
+    ret
+.load_coords
+    ld a, FSM_LOADX : ld (putc_fsm), a
+    ret
+_loadx:
+    ld a, c
+    sub 32
+    ld (coords), a
+    ld a, FSM_LOADY : ld (putc_fsm), a
+    ret
+_loady:
+    ld a, c
+    sub 32
+    ld (coords + 1), a
+exit_fsm:
+    xor a : ld (putc_fsm), a
+    ret
+_loadc:
+    ld a, c
+    and #f
+    ld h, 0 : ld l, a : ld de, .table : add hl, de
+    ld a, (hl) : ld c, a
+    ld a, (attr)
+    and #b8 : or c
+    ld (attr), a
+    jr exit_fsm
+.table db 000o, 001o, 002o, 003o, 004o, 005o, 006o, 007o, 100o, 101o, 102o, 103o, 104o, 105o, 106o, 107o
+
+_loadb:
+    ld a, c
+    and #f
+    ld h, 0 : ld l, a : ld de, .table : add hl, de
+    ld a, (hl) : ld c, a
+    ld a, (attr)
+    and #47 : or c
+    ld (attr), a
+    jr exit_fsm
+.table db 000o, 010o, 020o, 030o, 040o, 050o, 060o, 070o, 200o, 210o, 220o, 230o, 240o, 250o, 260o, 270o
+
+cursor_up:
+    ld a, (coords + 1)
+    and a
+    ret z
+    dec a
+    ld (coords + 1),a
+    ret
+
+cursor_left:
+    ld hl, (coords)
+    ld a, l
+    and a
+    jr z, .prev_line
+    dec a
+    ld l, a
+.exit
+    ld (coords), hl
+    ret
+.prev_line
+    ld a, h
+    and a
+    jr z, .exit
+    dec h
+    ld l, 84
+    jr .exit    
+
+_putc:
+    ld a, c
+    cp #01 : jr z, .home
+    cp #08 : jp z, cursor_left
+    
+    cp #0A : jr z, .lf
+    cp #0C : jp z, cls
+    cp #0D : jr z, .cr
+
+    cp #14 : jp z, cursor_up
+    cp #15 : jp z, .lf
+    cp #16 : jp z, cursor_left
+    cp #17 : jp z, .cursor_right
+    ; cp #18 : jp z, clear_line
+
+    cp #1A : jp z, cls
+    cp #1B : jr z, .set_esc
+
+    push af
+    xor a : ld (basic_draw.nop), a
+    pop af
+    call drawC
+
+.cursor_right
+    ld a, (coords) : inc a : cp 85 : jr nc, .crlf
+    ld (coords), a
+
+    ret
+.crlf
+    xor a : ld (coords), a
+    jr .lf
+.home
+    ld hl, 0 : ld (coords), hl
+    ret
+.set_esc
+    ld a, FSM_ESC : ld (putc_fsm), a
+    ret
+.cr
+    xor a : ld (coords), a
+    ret
+.lf
+    ld hl, coords + 1
+    inc (hl)
+scroll_check:
+    ld a, (coords + 1)
+    cp 30 : ret c
+    ld a, 29 : ld (coords + 1), a
+scroll:
+    ld a, PAGE_OFFLOAD : call Memory.setPage
+    ld hl, display_offset_table
+    ld b, 232
+.pass1
+    push bc
+    ld e, (hl)
+    inc hl
+    ld d, (hl)
+    inc hl
+    push hl
+
+    ld  bc, 14 
+    add hl, bc
+    ld c, (hl)
+    inc hl
+    ld b, (hl)
+
+    ld h, b
+    ld l, c
+
+    push hl, de
+    ld a, PAGE_BITMAP : call Memory.setPage
+    ld bc, 32
+    ldir
+    pop de, hl
+    push hl, de
+    ld a, h : xor #20 : ld h, a
+    ld a, d : xor #20 : ld d, a
+    ld bc, 32
+    ldir
+    pop de, hl
+    push hl, de
+    ld a, PAGE_ATTR : call Memory.setPage
+    ld bc, 32
+    ldir
+    pop de, hl
+    ld a, h : xor #20 : ld h, a
+    ld a, d : xor #20 : ld d, a
+    ld bc, 32
+    ldir
+    
+    ld a, PAGE_OFFLOAD : call Memory.setPage
+
+    pop hl
+    pop bc
+    djnz .pass1
+
+    ld b, 8
+.pass2
+    push bc
+    ld e, (hl) : inc hl
+    ld d, (hl) : inc hl
+    push hl
+
+    ld a, PAGE_BITMAP : call Memory.setPage
+
+    ld h, d
+    ld l, e
+    inc de
+    ld (hl), 0
+    
+    ld bc, 31
+    push hl, de
+    ldir
+    pop de, hl
+
+    push hl, de
+    ld a, h : xor #20 : ld h, a
+    ld a, d : xor #20 : ld d, a
+    ld (hl), 0
+    ld bc, 31
+    ldir
+
+    pop de, hl
+    ld a, PAGE_ATTR : call Memory.setPage
+    push hl, de
+    ld a, (attr)
+    ld (hl), a
+    ld bc, 31
+    ldir
+    pop de, hl
+    ld a, h : xor #20 : ld h, a
+    ld a, d : xor #20 : ld d, a
+    ld a, (attr)
+    ld (hl), a
+    ld bc, 31
+    ldir
+
+    ld a, PAGE_OFFLOAD : call Memory.setPage    
+    
+    pop hl
+    pop bc
+    djnz .pass2
+
+    ld a, PAGE_BITMAP : call Memory.setPage
+
+    ret
+
+
+find_screen:
+    ld a, e
+    srl a
+    ld e,a
+    ld b, #40
+    jr c, .proc
+    ld b, #60
+.proc
+    LD A,D
+    AND 7
+    RRCA
+    RRCA
+    RRCA
+    OR E
+    LD E,A
+    LD A,D
+    AND 24
+    OR b
+    LD D,A
+    ret
+
+drawC:
+    sub 32
+    ret c
+    ld l, a
+    ld h, 0
+    add hl, hl
+    add hl, hl
+    add hl, hl
+    ld bc, font
+    add hl, bc
+    push hl
+    ld a, PAGE_OFFLOAD : call Memory.setPage
+    pop hl
+    ld de, .char_tmp
+    
+    dup 8
+    ldi
+    edup
+
+    ld a, PAGE_BITMAP : call Memory.setPage
+    ld hl, (coords)
+    ld b, l
+    call .calc
+    ld d, h
+    ld e, l
+    ld (.rot_tmp), a
+    call find_screen
+    push de
+
+    ld de, .char_tmp
+
+    pop hl
+.print0
+    ld ix, hl
+    ld a, h 
+    bit 5, a 
+    jr nz, .ok
+    inc l
+.ok
+    xor #20 : ld h, a
+    ld iy, hl
+    ld a, (.rot_tmp)
+    call .rotate_mask
+    ld a, (.rot_tmp)
+    jp basic_draw
+.calc
+      ld l,0
+      ld a, b : and a : ret z
+      ld ix, 0
+      ld de,6
+1     add ix, de
+      djnz 1b
+      ld de, -8
+2     ld a, ixh
+      and a 
+      jr nz, 3f
+      ld a, ixl
+      cp 8
+      ret c
+3     
+      add ix, de
+      inc l
+      jr 2b
+      ret
+.rotate_mask
+    ld hl, #03ff
+    and a : ret z
+.rot_loop
+    ex af, af
+    ld a,l
+    rrca
+    rr h
+    rr l
+    ex af, af
+    dec a
+    jr nz, .rot_loop
+    ret
+
+.char_tmp ds 8
+
+.rot_tmp  db 0
+; A - rotation counter
+; DE - font PTR
+; HL - mask
+; IX - left half on screen 
+; IY - right half on screen
+basic_draw:
+    ld (.rot_cnt),a
+
+    ld a, l
+    ld (.mask1), a
+    ld a, h
+    ld (.mask2), a
+    ld b, 8
+.printIt
+    ld a, (de)
+    ld h, a
+    ld l, 0
+    ld a, 0
+.rot_cnt = $ - 1
+    and a : jr z, .skiprot
+.rot
+    ex af, af
+    ld a,l
+    rrca
+    rr h
+    rr l
+    ex af, af
+    dec a
+    jr nz, .rot
+.skiprot
+    ld a, (iy)
+    and #0f
+.mask1 = $ - 1
+    or l
+    ld (iy), a
+    ld a, (ix)
+    and #fc
+.mask2 = $ -1
+    or h
+    ld (ix), a
+    inc ixh
+    inc iyh
+    inc de
+    djnz .printIt
+.nop
+    nop
+; Draw attribute :-)
+    ld a, PAGE_ATTR : call Memory.setPage
+    ld a, (coords) : ld b, a
+    call drawC.calc
+    ld a, (coords + 1) : ld h, a
+    ex de, hl
+    call find_screen
+
+    ld a, (attr)
+    dup 8
+    ld (de), a
+    inc d
+    edup 
+    ret
+
+xor_cursor:
+    ld a, PAGE_BITMAP : call Memory.setPage
+    ld hl, (coords)
+    ld b, l
+    call drawC.calc
+    ld de, hl
+    ld (drawC.rot_tmp), a
+    call find_screen
+    ex hl, de
+
+    ld ix, hl
+    ld a, h 
+    bit 5, a 
+    jr nz, .ok
+    inc l
+.ok
+    xor #20 : ld h, a
+    ld iy, hl
+    ld a, (drawC.rot_tmp)
+    call drawC.rotate_mask
+    ld a, h : xor #ff : ld h,a
+    ld a, l : xor #ff : ld l,a
+    
+    ld b, 8
+.loop
+    ld a,(ix) : xor h : ld (ix),a
+    ld a,(iy) : xor l : ld (iy),a
+    inc ixh
+    inc iyh
+    djnz .loop 
+    ret
+
+
+
+attr        db  #07
+cursor_coords dw 0
+coords      dw  0
+putc_fsm    db  FSM_PUTC
+put_fsc_table:
+    dw _putc
+    dw _esc
+    dw _loadx
+    dw _loady
+    dw _loadc
+    dw _loadb
+
+    endmodule

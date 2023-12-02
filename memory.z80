@@ -1,0 +1,27 @@
+PAGE_USER = 1
+
+    module Memory
+DFFD_FROM_4000 = %1000
+DFFD_ALLRAM    = %10000
+DFFD_CPM       = %100000
+DFFD_SCR       = %1000000
+DFFD_HIRES     = %10000000
+
+page db 0
+
+setPage:
+    ld (page), a
+.no_store
+    push de
+    ld e, a
+    and %111 : or %1000
+    ld bc, #7ffd : out (c), a
+
+    ld a, e
+    rrca : rrca : rrca
+    and %111 : or DFFD_FROM_4000 | DFFD_ALLRAM | DFFD_HIRES 
+    ld bc, #dffd : out (c), a
+    pop de
+    ret
+
+    endmodule
