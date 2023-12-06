@@ -36,5 +36,8 @@ cpm_size = $ - cpm_start
     display "HERE: ",$
     ASSERT $ < #C000
 
+    emptytrd "cpm.trd"
+    savetrd "cpm.trd", |"cpm.C", #8000, $ - offload_end
+
     savehob "cpm.$c", "cpm.C", #8000, $ - offload_end
     savesna "cpm.sna", start

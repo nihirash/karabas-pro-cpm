@@ -180,12 +180,19 @@ init:
 .error1
     ld hl, .error1msg
     call BIOS.bios_print
-    ret
+.wait_key
+    xor a : in a, (#fe)  : cpl : and 31 : jr z, .wait_key
+    call Drive.init
+    ld hl, 0 : ld (part_table_offset), hl
+    
+    jr init
+
 .error1msg
     db 27, "b", #0A
     db 13, 10, "[ERROR]"
     db 27, "b", #00
     db " Didn't found partition table", 13, 10
+    db "Insert right SD card and press space", 13, 10
     db #FF
 
 find_partition:
