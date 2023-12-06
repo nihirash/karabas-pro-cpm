@@ -4,10 +4,6 @@
 
 ![screenshot](readme/screen.png)
 
-Important note!
-
-It's still unstable! Use on your risk but feel free use any ideas from this code for building your own products!
-
 ## About project
 
 This repository contains vanilla CP/M 2.2 ported to Karabas Pro. 
@@ -29,11 +25,20 @@ MMC card should have +3DOS volumes. Most important things are - SD card should h
 
 I'm using sjasmplus assembler for development tasks and ZXMak2 emulator.
 
-More information will be added later.
+More information will be added later. Almost all information about [ZXUno's port](https://github.com/nihirash/cpm-uno) are acceptable for this port now.
 
 ## Terminal
 
 Currently, implemented ADM-3 compatible terminal(like KayPro) with some extensions.
+
+## TODO
+
+ - [ ] Support UARTs
+ - [ ] Common stabilization and testing
+ - [ ] Write documentation
+ - [ ] Acquire real Karabas Pro for testing :-)
+ - [ ] SD card prepare utility
+ - [ ] Support floppy drives?!
 
 ## License
 

@@ -35,6 +35,6 @@ cpm_size = $ - cpm_start
     include "bios/offload.z80"
     display "HERE: ",$
     ASSERT $ < #C000
-    savehob "cpm.$c", "cpm.C", #8000, $ - offload_end
 
-    savesna "test.sna", start
+    savehob "cpm.$c", "cpm.C", #8000, $ - offload_end
+    savesna "cpm.sna", start

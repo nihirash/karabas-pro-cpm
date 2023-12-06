@@ -1,3 +1,4 @@
-*.sna
-*.$*
+cpm.sna
+cpm.\$c
+cpm.rom
 .DS_Store
