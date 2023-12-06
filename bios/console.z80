@@ -1,0 +1,21 @@
+    module Console
+status:
+    jp Keyboard.read_status
+;    ld a, (IOBYTE)
+;    and 3
+;    jp nz, keyboard.read_status
+;    jp  uart.status
+in:
+    jp Keyboard.read
+;    ld a, (IOBYTE)
+;    and 3
+;    jp nz, keyboard.read
+;    jp  uart.read
+
+out:
+    jp Display.write
+;    ld a, (IOBYTE)
+;    and 3
+;    jp nz, display.write
+;    jp uart.write
+    endmodule

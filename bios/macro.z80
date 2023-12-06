@@ -1,0 +1,17 @@
+    macro LOCAL_STACK
+    di
+    ld (BIOS.old_sp), sp
+    ld sp, #FFFF
+    push af, bc, de, hl,ix,iy
+    exx
+    push af, bc, de, hl,ix,iy
+    exx
+    endm
+
+    macro RESTORE_STACK
+    exx
+    pop iy,ix,hl, de, bc, af
+    exx
+    pop iy,ix,hl, de, bc, af
+    ld sp, (BIOS.old_sp)
+    endm

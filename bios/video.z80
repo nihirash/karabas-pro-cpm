@@ -1,7 +1,4 @@
     module Display
-PAGE_BITMAP = #06
-PAGE_ATTR   = #3a
-
     macro StartDrawing
     push af : ld a, PAGE_BITMAP : call Memory.setPage : pop af
     endm
@@ -41,7 +38,6 @@ init:
     ld a, h : ld (de), a : inc de 
     djnz .loop
     
-
     ld a, PAGE_BITMAP : call Memory.setPage
     call cls
 
@@ -71,9 +67,14 @@ exit:
     ld a, PAGE_USER : call Memory.setPage
     ret
 
+write:
+    LOCAL_STACK
+    call putc
+    ld a, PAGE_USER : call Memory.setPage
+    RESTORE_STACK
+    ret
 
 putc:
-    ld c, a
     push bc
     call xor_cursor
     pop bc    
@@ -114,13 +115,13 @@ _esc:
 _loadx:
     ld a, c
     sub 32
-    ld (coords), a
+    ld (coords + 1), a
     ld a, FSM_LOADY : ld (putc_fsm), a
     ret
 _loady:
     ld a, c
     sub 32
-    ld (coords + 1), a
+    ld (coords), a
 exit_fsm:
     xor a : ld (putc_fsm), a
     ret
@@ -189,10 +190,6 @@ _putc:
 
     cp #1A : jp z, cls
     cp #1B : jr z, .set_esc
-
-    push af
-    xor a : ld (basic_draw.nop), a
-    pop af
     call drawC
 
 .cursor_right
@@ -465,8 +462,6 @@ basic_draw:
     inc iyh
     inc de
     djnz .printIt
-.nop
-    nop
 ; Draw attribute :-)
     ld a, PAGE_ATTR : call Memory.setPage
     ld a, (coords) : ld b, a
@@ -513,8 +508,6 @@ xor_cursor:
     inc iyh
     djnz .loop 
     ret
-
-
 
 attr        db  #07
 cursor_coords dw 0

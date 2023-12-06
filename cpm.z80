@@ -1,0 +1,40 @@
+    device ZXSPECTRUM128
+    org #8000
+start:
+    di
+    ld a,  1 | Memory.DFFD_FROM_4000 | Memory.DFFD_ALLRAM 
+    ld bc, #dffd : out (c), a
+
+    ld sp, 0
+    ld hl, cpm
+    ld de, cpm_start
+    ld bc, cpm_size
+    ldir
+
+    ld a, PAGE_OFFLOAD : call Memory.setPage
+    
+    ld hl, offload_start
+    ld de, #4000
+    ld bc, offload_end - offload_start
+    ldir
+
+    ld a, PAGE_USER : call Memory.setPage
+
+    jp cpm_start
+
+cpm:
+    DISP $D5B0
+cpm_start:
+    jp BOOT
+    include "bdos/cpm.z80"
+    include "bios/bios.z80"
+    DISPLAY "BIOS ENDS AT ", $
+cpm_size = $ - cpm_start
+    ENT
+
+    include "bios/offload.z80"
+    display "HERE: ",$
+    ASSERT $ < #C000
+    savehob "cpm.$c", "cpm.C", #8000, $ - offload_end
+
+    savesna "test.sna", start

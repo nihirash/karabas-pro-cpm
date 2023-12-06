@@ -1,0 +1,61 @@
+    align #100
+BOOT:	JP	Boot.boot		
+WBOOT:	JP	Boot.wboot
+CONST:	JP	Console.status
+CONIN:	JP	Console.in
+CONOUT:	JP	Console.out
+LIST:	JP	BIOS.nothing
+PUNCH:	JP	BIOS.nothing
+READER:	JP	BIOS.nothing
+HOME:	JP	Disk.home
+SELDSK:	JP	Disk.seldsk
+SETTRK:	JP	Disk.settrk
+SETSEC:	JP	Disk.setsec
+SETDMA:	JP	Disk.set_dma
+READ:	JP	Disk.read
+WRITE:	JP	Disk.write
+PRSTAT:	JP	BIOS.nothing
+SECTRN:	JP	Disk.sectran
+
+    DEFINE ZC 1
+    
+    include "macro.z80"
+    include "disk.z80"
+    include "mmc.z80"
+    include "console.z80"
+    include "keyboard.z80"
+    include "memory.z80"
+    include "video.z80"
+    include "boot.z80"
+    module BIOS
+nothing:
+    ld a, #ff
+    ret
+
+
+install_int:
+    ld (.set_a),a
+    ld (.set_hl), hl
+    ld a, #0c3
+    ld (#38),a
+    ld hl, int_handler
+    ld (#39), hl
+    ld a,0
+.set_a = $ -1
+    ld hl, 0
+.set_hl = $ - 2
+    ret
+
+bios_print:
+    ld a, (hl) : cp #ff : ret z
+    inc hl
+    ld c, a
+    push hl
+    call Display.putc
+    pop hl
+    jr bios_print
+
+
+old_sp:
+    dw 0
+    endmodule

@@ -1,0 +1,78 @@
+    module Boot
+boot:
+    di
+    im 1
+    ld sp, #ffff
+
+    call Display.init
+
+    ld a, PAGE_OFFLOAD : call Memory.setPage
+    ld hl, CBASE
+    ld de, ccp_backup
+    ld bc, FBASE-CBASE
+    ldir
+
+    ld a, PAGE_USER : call Memory.setPage
+    call Drive.init
+
+    call show_banner
+    call Disk.init    
+
+    ld c, 0 : call SELDSK
+    xor a : ld (TDRIVE), a
+wboot:
+    di
+    ld sp, #ffff
+    ld a, PAGE_OFFLOAD : call Memory.setPage
+
+    ld hl, ccp_backup
+    ld de, CBASE
+    ld bc, FBASE-CBASE
+    ldir
+
+    ld a, PAGE_USER : call Memory.setPage
+    
+    ; Setup jump table
+    ld a, #c3
+    ld (0), a
+    ld hl, WBOOT
+    ld (1), hl
+    
+    ld (5), a
+    ld hl, FBASE 
+    ld (6), hl
+
+    ld bc, #80
+    call SETDMA
+    
+    ld a, 1 : ld (IOBYTE),a
+    
+    call BIOS.install_int
+
+    call HOME
+    im 1
+
+    ld sp, cpm - 1
+    
+    ld a, (TDRIVE)
+    ld c, a
+
+    ei
+    jp CBASE
+
+
+show_banner:
+    ld hl, banner
+    jp BIOS.bios_print
+
+banner:
+    db 27, "b", #09, 27, "c", #0f
+    db "  Karabas  ", 27, "c", #0f, 27, "b", 0, "  BIOS (c) 2023 Aleksandr Sharikhin", 13, 10
+    db 27, "c", 0, 27, "b", #0e
+    db " PRO  CP/M ", 27, "c", #0f, 27, "b", 0, "  BDOS (c) 1979 Digital Research", 13, 10
+    db 13,10 
+    db "System built: ", __DATE__,' ',__TIME__, 13, 10
+    db 13, 10
+    db #ff
+
+    endmodule

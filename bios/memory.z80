@@ -1,4 +1,7 @@
-PAGE_USER = 1
+PAGE_USER    = #01
+PAGE_OFFLOAD = #03
+PAGE_BITMAP  = #06
+PAGE_ATTR    = #3a
 
     module Memory
 DFFD_FROM_4000 = %1000
@@ -12,7 +15,7 @@ page db 0
 setPage:
     ld (page), a
 .no_store
-    push de
+    push de, bc
     ld e, a
     and %111 : or %1000
     ld bc, #7ffd : out (c), a
@@ -21,7 +24,7 @@ setPage:
     rrca : rrca : rrca
     and %111 : or DFFD_FROM_4000 | DFFD_ALLRAM | DFFD_HIRES 
     ld bc, #dffd : out (c), a
-    pop de
+    pop bc, de
     ret
 
     endmodule
