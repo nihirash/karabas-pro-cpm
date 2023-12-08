@@ -1,0 +1,40 @@
+    module Uart
+
+ZIFI_CMD_REG = #C7EF
+ZIFI_ERR_REG = #C7EF
+ZIFI_DATA_REG = #BFEF
+ZIFI_FIFO_IN = #C0EF
+ZIFI_FIFO_OUT = #C1EF
+
+ZIFI_CMD_CLEAR_FIFO_IN = #01
+ZIFI_CMD_CLEAR_FIFO_OUT = #02
+ZIFI_CMD_CLEAR_FIFO_BOTH = #03
+ZIFI_CMD_API_DISABLE = #F0
+ZIFI_CMD_API_ENABLE = #F1
+ZIFI_CMD_API_VERSION = #FF
+
+init:
+    ld bc, ZIFI_CMD_REG : ld a, ZIFI_CMD_API_ENABLE : out (c), a
+    ld bc, ZIFI_CMD_REG : ld a, ZIFI_CMD_CLEAR_FIFO_BOTH : out (c), a
+    ret
+
+status:
+    ld bc, ZIFI_FIFO_IN : in a, (c)
+    ret z
+    ld a, #ff
+    ret
+
+read:
+    ld bc, ZIFI_FIFO_IN 
+1
+    in a, (c) 
+    jr z, 1b
+    ld bc, ZIFI_DATA_REG : in a, (c)
+    ret
+
+write:
+    ld a, c
+    ld bc, ZIFI_DATA_REG : out (c), a
+    ret
+
+    endmodule

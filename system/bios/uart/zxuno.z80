@@ -1,3 +1,6 @@
+;; Looks like broken.
+;; Better use ZiFi's one
+
     module Uart
 UART_DATA_REG = #c6
 UART_STAT_REG = #c7
