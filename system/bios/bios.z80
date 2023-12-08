@@ -16,8 +16,6 @@ READ:	JP	Disk.read
 WRITE:	JP	Disk.write
 PRSTAT:	JP	BIOS.nothing
 SECTRN:	JP	Disk.sectran
-
-    DEFINE ZC 1
     
     include "macro.z80"
     include "disk.z80"

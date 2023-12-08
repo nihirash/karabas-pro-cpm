@@ -192,7 +192,7 @@ init:
     db 13, 10, "[ERROR]"
     db 27, "b", #00
     db " Didn't found partition table", 13, 10
-    db "Insert right SD card and press space", 13, 10
+    db "Insert right SD card and press ", 27, "b", #09, "[SPACE]", 27, "b", #00, 13, 10
     db #FF
 
 find_partition:

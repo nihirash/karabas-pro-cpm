@@ -23,9 +23,19 @@ MMC card should have +3DOS volumes. Most important things are - SD card should h
 
 ## Development
 
-I'm using sjasmplus assembler for development tasks and ZXMak2 emulator.
-
 More information will be added later. Almost all information about [ZXUno's port](https://github.com/nihirash/cpm-uno) are acceptable for this port now.
+
+### Prerequirements
+ 
+ - GNU Make
+ - [sjasmplus](https://github.com/z00m128/sjasmplus) assembler(used for everything)
+ - [zx7b](https://github.com/antoniovillena/zx7b) packer
+
+### Building
+
+Open `system` directory and call `make` utility - it will build `page3.bin` and `page7.bin` files, pack them with zx7 packer and after it - you'll got `cpm.$c` hobeta that contains all system with loader.
+
+I'm using sjasmplus assembler for development tasks and ZXMak2 emulator.
 
 ## Terminal
 
@@ -38,6 +48,7 @@ Currently, implemented ADM-3 compatible terminal(like KayPro) with some extensio
  - [ ] Write documentation
  - [ ] Acquire real Karabas Pro for testing :-)
  - [ ] SD card prepare utility
+ - [ ] Support ProfiIDE interface
  - [ ] Support floppy drives?!
 
 ## License

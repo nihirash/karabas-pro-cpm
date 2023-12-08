@@ -3,3 +3,5 @@ cpm.\$c
 cpm.rom
 cpm.trd
 .DS_Store
+*.zx7
+page*.bin

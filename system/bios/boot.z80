@@ -52,7 +52,7 @@ wboot:
     call HOME
     im 1
 
-    ld sp, cpm - 1
+    ld sp, cpm_start - 1
     
     ld a, (TDRIVE)
     ld c, a
