@@ -15,6 +15,7 @@ page7.zx7: page7.bin
 		$(PACKER) page7.bin page7.zx7
 
 page3.bin page7.bin: $(SOURCES) $(BLOBS)
+		git rev-parse --short HEAD >git_commit
 		$(ASM) $(FLAGS) cpm.z80
 
 all: cpm.\$c

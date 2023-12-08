@@ -71,8 +71,9 @@ banner:
     db 27, "c", 0, 27, "b", #0e
     db " PRO  CP/M ", 27, "c", #0f, 27, "b", 0, "  BDOS (c) 1979 Digital Research", 13, 10
     db 13,10 
-    db "System built: ", __DATE__,' ',__TIME__, 13, 10
-    db 13, 10
+    db "System built: ", __DATE__,' ',__TIME__, ' '
+    incbin 'git_commit'
+    db 10
     db #ff
 
     endmodule
