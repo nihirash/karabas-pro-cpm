@@ -1,21 +1,21 @@
     module Console
+    display "status ", status
+    display "in ", in
+    display "out", out
+
 status:
-    jp Keyboard.read_status
-;    ld a, (IOBYTE)
-;    and 3
-;    jp nz, keyboard.read_status
-;    jp  uart.status
+    ld a, (IOBYTE) : and 3
+    jp nz, Keyboard.read_status
+    jp Uart.status
+
 in:
-    jp Keyboard.read
-;    ld a, (IOBYTE)
-;    and 3
-;    jp nz, keyboard.read
-;    jp  uart.read
+    ld a, (IOBYTE) : and 3
+    jp nz, Keyboard.read
+    jp Uart.read
 
 out:
-    jp Display.write
-;    ld a, (IOBYTE)
-;    and 3
-;    jp nz, display.write
-;    jp uart.write
+    ld a, (IOBYTE) : and 3
+    jp nz, Display.write
+    jp Uart.write
+
     endmodule

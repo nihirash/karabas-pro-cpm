@@ -5,6 +5,7 @@ boot:
     ld sp, #ffff
 
     call Display.init
+    call Uart.init
 
     ld a, PAGE_OFFLOAD : call Memory.setPage
     ld hl, CBASE
@@ -46,7 +47,6 @@ wboot:
     call SETDMA
     
     ld a, 1 : ld (IOBYTE),a
-    
     call BIOS.install_int
 
     call HOME

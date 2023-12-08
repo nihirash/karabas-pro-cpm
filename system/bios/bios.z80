@@ -19,17 +19,27 @@ SECTRN:	JP	Disk.sectran
     
     include "macro.z80"
     include "disk.z80"
+    display "disk ends ", $
     include "mmc.z80"
+    display "mmc ends ", $
     include "console.z80"
+    display "console ends ", $
     include "keyboard.z80"
+    display "keyboard ends ", $
     include "memory.z80"
+    display "memory ends ", $
     include "video.z80"
+    display "video ends ", $
     include "boot.z80"
+    display "boot ends ", $
+    include "uart/uart.z80"
+    display "uart ends ", $
+
     module BIOS
+
 nothing:
     ld a, #ff
     ret
-
 
 install_int:
     ld (.set_a),a
@@ -56,4 +66,5 @@ bios_print:
 
 old_sp:
     dw 0
+
     endmodule

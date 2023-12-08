@@ -1,6 +1,9 @@
 ASM=sjasmplus
-# -DZC for Z-Controller -DDIVMMC - for divMMC ports
-FLAGS=-DZC 
+# -DZC for Z-Controller 
+# -DDIVMMC - for divMMC ports
+# -DZXUNO - for ZXUNO Uart
+# -DZIFI - for ZXEvo Uart
+FLAGS=-DZC -DZXUNO
 SOURCES:=$(shell find bdos -type f -iname  "*.z80") $(shell find bios -type f -iname  "*.z80") cpm.z80
 BLOBS:=$(shell find blob -type f -iname "*.bin")
 PACKER=zx7b

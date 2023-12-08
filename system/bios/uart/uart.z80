@@ -1,0 +1,7 @@
+    ifdef ZXUNO
+    include "zxuno.z80"
+    endif
+
+    ifdef ZIFI
+    include "zifi.z80"
+    endif

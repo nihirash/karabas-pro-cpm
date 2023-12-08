@@ -18,7 +18,7 @@ start:
     call dzx7
 
     ld a,  %11001 : ld bc, #dffd : out (c), a
-    jp #D5B0
+    jp #D000
 
     incbin "page3.zx7"
 page3 = $ - 1
