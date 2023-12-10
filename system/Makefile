@@ -14,8 +14,10 @@ page7.zx7: page7.bin
 
 page3.bin page7.bin: $(SOURCES) $(BLOBS) config.z80 .version
 		git rev-parse --short HEAD >git_commit
-		date '+%Y.%m.%d' >.version
 		$(ASM) $(FLAGS) cpm.z80
+
+.version:
+		date '+%Y.%m.%d' >.version
 
 all: cpm.\$$c
 
