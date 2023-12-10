@@ -1,0 +1,13 @@
+name: build-system
+run-name: Build operating system with sjasmplus
+on: 
+    push:
+        branches: [ main, actions ]
+jobs:
+    build-sources:
+        runs-on: [ubuntu-latest, aarch64]
+        container: nihirash/sjasmplus
+        steps:
+            - uses: actions/checkout@v4
+            - name: Build OS image using sjasmplus
+              run: (cd system && make all)
