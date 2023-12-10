@@ -1,7 +1,7 @@
 
     module Disk
 
-drives_offsets  ds 4 * MAX_VOLUMES
+drives_offsets  ds 3 * MAX_VOLUMES
 
 dpbase:	
     dup MAX_VOLUMES, idx

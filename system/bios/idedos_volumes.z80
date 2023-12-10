@@ -24,7 +24,6 @@ init:
     jr .loop
 
 .notFound:
-    di : halt
     pop hl
     ret
 .error1
@@ -143,7 +142,6 @@ _chs_to_sector_carry_on:
 cur_sect   ds 4
 sec_buffer ds 512
 
-    display "IDE_DOS VARS: ", part_table_offset
 part_table_offset dw 0
 volumes_found db #ff
 partition   db 'CPM.'

@@ -3,4 +3,4 @@
 ;   DEFINE  DIVMMC              ; DIVMMC for MMC operations
     DEFINE  ZIFI_UART           ; ZiFi-compatible UART 
 ;   DEFINE  ZXUNO_UART          ; ZXUno-compatible UART
-    DEFINE  MAX_VOLUMES 9       ; How many +3E Volumes will be used as drives
+    DEFINE  MAX_VOLUMES 11      ; How many +3E Volumes will be used as drives
