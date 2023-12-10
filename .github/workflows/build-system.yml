@@ -2,7 +2,8 @@ name: build-system
 run-name: Build operating system with sjasmplus
 on: 
     push:
-        branches: [ main, actions ]
+        tags: 
+            - '*'
 jobs:
     build-sources:
         runs-on: [ubuntu-latest]
@@ -17,7 +18,7 @@ jobs:
               run: (cd system && make)
 
             - name: Release
-              id: create_release
+            
               uses: actions/create-release@v1
               with:
                 draft: false
