@@ -1,0 +1,39 @@
+name: build-system
+run-name: Build operating system with sjasmplus
+on: 
+    push:
+        branches: [ main, actions ]
+jobs:
+    build-sources:
+        runs-on: [ubuntu-latest]
+        container: nihirash/sjasmplus:x64
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Fix ownership
+              run: chown -R $(id -u):$(id -g) $PWD
+
+            - name: Build OS from sources using dockerized sjasmplus
+              run: (cd system && make)
+
+            - name: Release
+              id: create_release
+              uses: actions/create-release@v1
+              with:
+                draft: false
+                prerelease: false
+                release_name: CI build ${{ github.ref }}
+                tag_name: ${{ github.ref }}
+                body_path: CHANGELOG.md
+              env:
+                GITHUB_TOKEN: ${{ github.token }}
+            
+            - name: Upload artifact
+              uses: actions/upload-release-asset@v1
+              env:
+                GITHUB_TOKEN: ${{ github.token }}
+              with:
+                upload_url: ${{ steps.create_release.outputs.upload_url }}
+                asset_path: "./system/cpm.$c"
+                asset_name: "CP/M as Hobeta file"
+              
