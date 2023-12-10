@@ -5,8 +5,8 @@ on:
         branches: [ main, actions ]
 jobs:
     build-sources:
-        runs-on: [ubuntu-latest, aarch64]
-        container: nihirash/sjasmplus
+        runs-on: [ubuntu-latest]
+        container: nihirash/sjasmplus:x64
         steps:
             - uses: actions/checkout@v4
             - name: Build OS image using sjasmplus
