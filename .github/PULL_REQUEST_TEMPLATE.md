@@ -4,5 +4,6 @@
 
  - [ ] It boots from hobeta to working system
  - [ ] Basic behaviour is fine
+ - [ ] Change log updated
  
  Checklist should be extended after any broking behavior
