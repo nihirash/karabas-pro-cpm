@@ -40,8 +40,7 @@ init:
     
     ld a, PAGE_BITMAP : call Memory.setPage
     call cls
-
-    ret
+    jr exit
 
 cls:
     xor a
@@ -61,6 +60,7 @@ cls:
     ld de, #4001
     ld bc, 16383
     ldir
+    ret
 
 exit:   
     call xor_cursor
@@ -173,6 +173,24 @@ cursor_left:
     ld l, 84
     jr .exit    
 
+; Not too clear but 
+clear_line:
+    ld de, (coords)
+.loop
+    ld a, 84
+    cp e : ret z
+    push de
+    call find_screen
+    xor a
+
+    dup 8 
+    ld (de), a
+    inc d
+    edup
+    pop de
+    inc e
+    jr .loop
+
 _putc:
     ld a, c
     cp #01 : jr z, .home
@@ -186,7 +204,7 @@ _putc:
     cp #15 : jp z, .lf
     cp #16 : jp z, cursor_left
     cp #17 : jp z, .cursor_right
-    ; cp #18 : jp z, clear_line
+    cp #18 : jp z, clear_line
 
     cp #1A : jp z, cls
     cp #1B : jr z, .set_esc
