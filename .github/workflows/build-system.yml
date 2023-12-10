@@ -6,12 +6,11 @@ on:
 jobs:
     build-sources:
         runs-on: [ubuntu-latest]
-        container: nihirash/sjasmplus:x64
         steps:
             - uses: actions/checkout@v4
 
-            - name: Check sjasmplus
-              run: sjasmplus --version
-
-            - name: Build OS image using sjasmplus
-              run: (pwd && cd system && make all)
+            - name: Build OS from sources using dockerized sjasmplus
+              uses: devcontainers/ci@v0.3
+              with: 
+                imageName: nihirash/sjasmplus:x64
+                runCmd: (cd system && make)
