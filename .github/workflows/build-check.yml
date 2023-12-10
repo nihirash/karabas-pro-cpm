@@ -3,6 +3,7 @@ run-name: Build operating system with sjasmplus
 on: 
     push:
         branches:
+          - '**'
           - '!main'
 jobs:
     create-release:
