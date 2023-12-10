@@ -16,7 +16,7 @@ dpbase:
 dirbf ds $80
 all00 
     dup MAX_VOLUMES
-    ds 240
+    ds $ff
     edup 
 
     endmodule
