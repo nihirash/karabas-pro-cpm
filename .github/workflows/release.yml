@@ -1,5 +1,5 @@
 name: build-system
-run-name: Build operating system with sjasmplus
+run-name: Build and release operating system with sjasmplus
 on: 
     push:
         branches: [ main ]
