@@ -10,5 +10,8 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
+            - name: Fix ownership
+              run: chown -R $(id -u):$(id -g) $PWD
+
             - name: Build OS from sources using dockerized sjasmplus
               run: (cd system && make)
