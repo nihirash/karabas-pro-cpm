@@ -1,0 +1,22 @@
+
+    module Disk
+
+drives_offsets  ds 4 * MAX_VOLUMES
+
+dpbase:	
+    dup MAX_VOLUMES, idx
+    
+    defw	0000h, 0000h
+    defw	0000h, 0000h
+    defw	dirbf, dpblk
+    defw	0000h, all00 + (idx * 240)
+
+    edup
+
+dirbf ds $80
+all00 
+    dup MAX_VOLUMES
+    ds 240
+    edup 
+
+    endmodule

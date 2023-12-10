@@ -20,6 +20,8 @@ SECTRN:	JP	Disk.sectran
     include "macro.z80"
     include "disk.z80"
     display "disk ends ", $
+    include "idedos_volumes.z80"
+    display "idedos volumes ends ", $
     include "mmc.z80"
     display "mmc ends ", $
     include "console.z80"
@@ -68,3 +70,5 @@ old_sp:
     dw 0
 
     endmodule
+    
+    include "drive_buffers.z80"

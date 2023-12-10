@@ -14,10 +14,11 @@ It uses +3DOS volumes on Z-Controller SD card as CP/M's partitions.
 
 ## SD Card layout
 
-MMC card should have +3DOS volumes. Most important things are - SD card should have these volumes:
+MMC card should have +3DOS volumes. Most important things are - SD card should have up to 9 volumes named:
  * `CPM.A`(case sensitive - important create them in uppercase, 8 megs size - cause CP/M 2.2 limitations)
  * `CPM.B`(similar)
  * `CPM.C`
+ * .....
 
  Only `CPM.A` volume is mandatory but it easier to use with 3 drives
 

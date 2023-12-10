@@ -3,6 +3,12 @@ offload_start:
     DISP #4000
 font:
     incbin "../blob/font80.bin"
+
+    module Display
+_loadc_table db 000o, 001o, 002o, 003o, 004o, 005o, 006o, 007o, 100o, 101o, 102o, 103o, 104o, 105o, 106o, 107o
+_loadb_table db 000o, 010o, 020o, 030o, 040o, 050o, 060o, 070o, 200o, 210o, 220o, 230o, 240o, 250o, 260o, 270o
+    endmodule
+
     module Keyboard            
 Keyboard_Map:           DB 0x00,"z","x","c","v"
                         DB "a","s","d","f","g"

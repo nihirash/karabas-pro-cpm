@@ -17,7 +17,7 @@ boot:
     call Drive.init
 
     call show_banner
-    call Disk.init    
+    call IDEDOS_Volumes.init    
 
     ld c, 0 : call SELDSK
     xor a : ld (TDRIVE), a
