@@ -10,7 +10,5 @@ jobs:
             - uses: actions/checkout@v4
 
             - name: Build OS from sources using dockerized sjasmplus
-              uses: devcontainers/ci@v0.3
-              with: 
-                imageName: nihirash/sjasmplus:x64
-                runCmd: (cd system && make)
+              container: nihirash/sjasmplus:x64
+              run: (cd system && make)
