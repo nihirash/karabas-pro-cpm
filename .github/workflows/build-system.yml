@@ -9,5 +9,9 @@ jobs:
         container: nihirash/sjasmplus:x64
         steps:
             - uses: actions/checkout@v4
+
+            - name: Check sjasmplus
+              run: sjasmplus --version
+
             - name: Build OS image using sjasmplus
-              run: (cd system && make all)
+              run: (pwd && cd system && make all)
