@@ -6,9 +6,11 @@ on:
 jobs:
     build-sources:
         runs-on: [ubuntu-latest]
+        container: nihirash/sjasmplus:x64
         steps:
             - uses: actions/checkout@v4
+              with:
+                path: /src/
 
             - name: Build OS from sources using dockerized sjasmplus
-              container: nihirash/sjasmplus:x64
-              run: (cd system && make)
+              run: (cd /src/system && make)
