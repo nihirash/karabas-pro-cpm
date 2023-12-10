@@ -2,7 +2,7 @@ name: build-system
 run-name: Build operating system with sjasmplus
 on: 
     push:
-        branches: [ main, actions-config ]
+        branches: [ main ]
 jobs:
     create-release:
         runs-on: [ubuntu-latest]
