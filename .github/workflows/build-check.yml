@@ -6,7 +6,7 @@ on:
           - '**'
           - '!main'
 jobs:
-    create-release:
+    ci-build-check:
         runs-on: [ubuntu-latest]
         container: nihirash/sjasmplus:x64
         steps:
