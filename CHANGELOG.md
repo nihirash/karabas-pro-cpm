@@ -1,3 +1,7 @@
+# Future Version
+ - Memory usage optimised 
+ - IDEDOS partitions work rewritten - up to 11 partitions supported
+
 # Initial public version
 
 Built with next features:

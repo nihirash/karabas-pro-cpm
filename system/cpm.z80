@@ -1,5 +1,5 @@
     device ZXSPECTRUM128
-    CSPECTMAP "cpm.lbl"
+;    CSPECTMAP "cpm.lbl"
 
     include "config.z80"
     page 3
