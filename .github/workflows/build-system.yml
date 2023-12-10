@@ -9,8 +9,6 @@ jobs:
         container: nihirash/sjasmplus:x64
         steps:
             - uses: actions/checkout@v4
-              with:
-                path: /src/
 
             - name: Build OS from sources using dockerized sjasmplus
-              run: (cd /src/system && make)
+              run: (cd system && make)
