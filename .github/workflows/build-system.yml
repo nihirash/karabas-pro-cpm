@@ -18,7 +18,7 @@ jobs:
 
             - name: Read version
               id: version
-              run: echo "::set-output name=version::$(cat system/.version)"
+              run: echo version=$(cat system/.version)" >> $GITHUB_OUTPUT
 
             - name: Release
             
