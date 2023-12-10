@@ -21,7 +21,7 @@ jobs:
               run: echo "version=$(cat system/.version)" >> $GITHUB_OUTPUT
 
             - name: Release
-            
+              id: create_release
               uses: actions/create-release@v1
               with:
                 draft: false
