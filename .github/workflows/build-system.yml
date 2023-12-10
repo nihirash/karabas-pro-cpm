@@ -2,8 +2,7 @@ name: build-system
 run-name: Build operating system with sjasmplus
 on: 
     push:
-        tags: 
-            - '*'
+        branches: [ main, actions-config ]
 jobs:
     build-sources:
         runs-on: [ubuntu-latest]
@@ -16,6 +15,10 @@ jobs:
 
             - name: Build OS from sources using dockerized sjasmplus
               run: (cd system && make)
+
+            - name: Read version
+              id: version
+              run: echo "::set-output name=version::$(cat system/.version)"
 
             - name: Release
             
