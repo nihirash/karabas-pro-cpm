@@ -1,14 +1,9 @@
 ASM=sjasmplus
-# -DZC for Z-Controller 
-# -DDIVMMC - for divMMC ports
-# -DZXUNO - for ZXUNO Uart - currently unstable on Karabas Pro. Better use ZIFI uart
-# -DZIFI - for ZXEvo Uart
-FLAGS=-DZC -DZIFI
 SOURCES:=$(shell find bdos -type f -iname  "*.z80") $(shell find bios -type f -iname  "*.z80") cpm.z80
 BLOBS:=$(shell find blob -type f -iname "*.bin")
 PACKER=zx7b
 
-cpm.\$c: page3.zx7 page7.zx7 loader.z80
+cpm.\$c: page3.zx7 page7.zx7 loader.z80 config.z80
 		$(ASM) loader.z80
 
 page3.zx7: page3.bin
@@ -17,7 +12,7 @@ page3.zx7: page3.bin
 page7.zx7: page7.bin
 		$(PACKER) page7.bin page7.zx7
 
-page3.bin page7.bin: $(SOURCES) $(BLOBS)
+page3.bin page7.bin: $(SOURCES) $(BLOBS) config.z80
 		git rev-parse --short HEAD >git_commit
 		$(ASM) $(FLAGS) cpm.z80
 

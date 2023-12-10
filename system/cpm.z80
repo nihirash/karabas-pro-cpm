@@ -1,12 +1,12 @@
     device ZXSPECTRUM128
-    
+    include "config.z80"
     page 3
     org #c000
     include "bios/offload.z80"
     savebin "page3.bin", #c000, #4000
 
     page 7
-    org #D000 
+    org BASE_ADDRESS - 3
 cpm_start:
     jp BOOT
     include "bdos/cpm.z80"

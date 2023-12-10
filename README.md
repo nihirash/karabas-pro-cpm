@@ -43,7 +43,8 @@ Currently, implemented ADM-3 compatible terminal(like KayPro) with some extensio
 
 ## TODO
 
- - [ ] Support UARTs
+ - [x] Support UARTs
+ - [ ] Rewrite partition management
  - [ ] General stabilization and testing
  - [ ] Write documentation
  - [ ] Acquire real Karabas Pro for testing :-)
