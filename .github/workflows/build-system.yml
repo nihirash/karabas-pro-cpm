@@ -15,6 +15,9 @@ jobs:
 
             - name: Build OS from sources using dockerized sjasmplus
               run: (cd system && make)
+            
+            - name: Pack release
+              run: (cd system && zip release.zip cpm.\$c)
 
             - name: Read version
               id: version
@@ -38,7 +41,7 @@ jobs:
                 GITHUB_TOKEN: ${{ github.token }}
               with:
                 upload_url: ${{ steps.create_release.outputs.upload_url }}
-                asset_path: "./system/cpm.$c"
-                asset_name: "cpm.\$$c"
-                asset_content_type: "application/hobeta"
+                asset_path: "./system/release.zip"
+                asset_name: "release.zip"
+                asset_content_type: "application/zip"
               
