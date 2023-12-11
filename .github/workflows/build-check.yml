@@ -17,3 +17,6 @@ jobs:
 
             - name: Build OS from sources using dockerized sjasmplus
               run: (cd system && make)
+
+            - name: Check packing release
+              run: (cd system && zip release.zip cpm.\$c ../drive_image/sdcard.zip) && rm system/release.zip
