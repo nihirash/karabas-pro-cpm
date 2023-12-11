@@ -94,7 +94,6 @@ putc:
 
 
 _esc:
-
     ld a, c
     cp '=' : jr z, .load_coords
     cp 'c' : jr z, .load_col
@@ -125,27 +124,28 @@ _loady:
 exit_fsm:
     xor a : ld (putc_fsm), a
     ret
-_loadc:
+
+_loadt:
     ld a, c
     and #f
-    ld h, 0 : ld l, a : ld de, .table : add hl, de
+    ld h, 0 : ld l, a : add hl, de
+    ld a, PAGE_OFFLOAD : call Memory.setPage
     ld a, (hl) : ld c, a
     ld a, (attr)
+    ret
+
+_loadc:
+    ld de, _loadc_table : call _loadt
     and #b8 : or c
     ld (attr), a
     jr exit_fsm
-.table db 000o, 001o, 002o, 003o, 004o, 005o, 006o, 007o, 100o, 101o, 102o, 103o, 104o, 105o, 106o, 107o
+
 
 _loadb:
-    ld a, c
-    and #f
-    ld h, 0 : ld l, a : ld de, .table : add hl, de
-    ld a, (hl) : ld c, a
-    ld a, (attr)
+    ld de, _loadb_table : call _loadt
     and #47 : or c
     ld (attr), a
     jr exit_fsm
-.table db 000o, 010o, 020o, 030o, 040o, 050o, 060o, 070o, 200o, 210o, 220o, 230o, 240o, 250o, 260o, 270o
 
 cursor_up:
     ld a, (coords + 1)

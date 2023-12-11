@@ -1,3 +1,8 @@
+# 2023.12.11
+ - Memory usage optimised 
+ - IDEDOS partitions work rewritten - up to 11 partitions supported
+ - Example of SD Card image was added(with predefined volumes)
+
 # Initial public version
 
 Built with next features:

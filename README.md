@@ -1,6 +1,6 @@
 # CP/M 2.2 port for Karabas Pro
 
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/D1D6JVS74)
+[![build-system](https://github.com/nihirash/karabas-pro-cpm/actions/workflows/build-system.yml/badge.svg)](https://github.com/nihirash/karabas-pro-cpm/actions/workflows/build-system.yml) [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/D1D6JVS74) 
 
 ![screenshot](readme/screen.png)
 
@@ -14,12 +14,13 @@ It uses +3DOS volumes on Z-Controller SD card as CP/M's partitions.
 
 ## SD Card layout
 
-MMC card should have +3DOS volumes. Most important things are - SD card should have these volumes:
+MMC card should have +3DOS volumes. Most important things are - SD card should have up to 11 volumes named:
  * `CPM.A`(case sensitive - important create them in uppercase, 8 megs size - cause CP/M 2.2 limitations)
  * `CPM.B`(similar)
  * `CPM.C`
+ * .....
 
- Only `CPM.A` volume is mandatory but it easier to use with 3 drives
+ Only `CPM.A` volume is mandatory but it's really easier to use with more than one drive
 
 ## Development
 
@@ -44,7 +45,7 @@ Currently, implemented ADM-3 compatible terminal(like KayPro) with some extensio
 ## TODO
 
  - [x] Support UARTs
- - [ ] Rewrite partition management
+ - [x] Rewrite partition management
  - [ ] General stabilization and testing
  - [ ] Write documentation
  - [ ] Acquire real Karabas Pro for testing :-)

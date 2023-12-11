@@ -1,8 +1,4 @@
     module Console
-    display "status ", status
-    display "in ", in
-    display "out", out
-
 status:
     ld a, (IOBYTE) : and 3
     jp nz, Keyboard.read_status

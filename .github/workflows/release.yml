@@ -1,5 +1,5 @@
 name: build-system
-run-name: Build operating system with sjasmplus
+run-name: Build and release operating system with sjasmplus
 on: 
     push:
         branches: [ main ]
@@ -17,7 +17,7 @@ jobs:
               run: (cd system && make)
             
             - name: Pack release
-              run: (cd system && zip release.zip cpm.\$c)
+              run: (cd system && zip release.zip cpm.\$c ../drive_image/sdcard.zip)
 
             - name: Read version
               id: version
@@ -29,7 +29,7 @@ jobs:
               with:
                 draft: false
                 prerelease: false
-                release_name: CI build ${{ steps.version.outputs.version }} ${{ github.ref }}
+                release_name: CI build ${{ steps.version.outputs.version }}
                 tag_name: ${{ steps.version.outputs.version }}
                 body_path: CHANGELOG.md
               env:
