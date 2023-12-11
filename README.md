@@ -1,6 +1,6 @@
 # CP/M 2.2 port for Karabas Pro
 
-[![build-system](https://github.com/nihirash/karabas-pro-cpm/actions/workflows/build-system.yml/badge.svg)](https://github.com/nihirash/karabas-pro-cpm/actions/workflows/build-system.yml) [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/D1D6JVS74) 
+[![build-system](https://github.com/nihirash/karabas-pro-cpm/actions/workflows/release.yml/badge.svg?branch=main)](https://github.com/nihirash/karabas-pro-cpm/actions/workflows/release.yml) [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/D1D6JVS74) 
 
 ![screenshot](readme/screen.png)
 
