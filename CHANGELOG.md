@@ -1,3 +1,7 @@
+# Future release
+ - ZCPR is no longer blob. Sources are included
+ - Autoexec via submit
+
 # 2023.12.11
  - Memory usage optimised 
  - IDEDOS partitions work rewritten - up to 11 partitions supported

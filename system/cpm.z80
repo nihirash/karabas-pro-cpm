@@ -1,5 +1,5 @@
     device ZXSPECTRUM128
-;    CSPECTMAP "cpm.lbl"
+    CSPECTMAP "cpm.lbl"
 
     include "config.z80"
     page 3
@@ -11,7 +11,7 @@
     org BASE_ADDRESS - 3
 cpm_start:
     jp BOOT
-    include "bdos/cpm.z80"
+    include "bdos/bdos.z80"
     include "bios/bios.z80"
     display "BIOS ENDS AT: ", $
     savebin "page7.bin", #c000, #4000

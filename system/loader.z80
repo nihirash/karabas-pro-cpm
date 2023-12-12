@@ -182,3 +182,4 @@ offndo: rr      e
         jp      copbyo
 
     savehob "cpm.$c", "cpm.C", start, $ - start
+    savebin "cpm.sys", start, $ - start

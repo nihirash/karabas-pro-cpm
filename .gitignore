@@ -2,6 +2,7 @@ cpm.sna
 cpm.\$c
 cpm.rom
 cpm.trd
+cpm.sys
 .DS_Store
 *.zx7
 page*.bin

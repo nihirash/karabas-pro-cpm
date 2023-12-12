@@ -39,8 +39,7 @@ DEL	EQU	7FH		;rubout
 ;
 ;
 CBASE:	
-    display "CCP: ", $
-    incbin "../blob/zcpr.bin"
+    include "zcpr.z80"
 ;**************************************************************
 ;*
 ;*                    B D O S   E N T R Y

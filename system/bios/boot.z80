@@ -21,6 +21,9 @@ boot:
 
     ld c, 0 : call SELDSK
     xor a : ld (TDRIVE), a
+
+    call Autoexec.try
+    jr wboot.skip_move
 wboot:
     di
     ld sp, #ffff
@@ -30,7 +33,7 @@ wboot:
     ld de, CBASE
     ld bc, FBASE-CBASE
     ldir
-
+.skip_move:
     ld a, PAGE_USER : call Memory.setPage
     
     ; Setup jump table
@@ -56,7 +59,7 @@ wboot:
     
     ld a, (TDRIVE)
     ld c, a
-
+    
     ei
     jp CBASE
 
@@ -64,16 +67,5 @@ wboot:
 show_banner:
     ld hl, banner
     jp BIOS.bios_print
-
-banner:
-    db 27, "b", #09, 27, "c", #0f
-    db "  Karabas  ", 27, "c", #0f, 27, "b", 0, "  BIOS (c) 2023 Aleksandr Sharikhin", 13, 10
-    db 27, "c", 0, 27, "b", #0e
-    db " PRO  CP/M ", 27, "c", #0f, 27, "b", 0, "  BDOS (c) 1979 Digital Research", 13, 10
-    db 13,10 
-    db "System built: ", __DATE__,' ',__TIME__, ' '
-    incbin 'git_commit'
-    db 10
-    db #ff
 
     endmodule

@@ -1,0 +1,14 @@
+    module Autoexec
+try:
+    ld hl, .cmd
+    ld de, CCP.CBUFF
+    ld bc, .len
+    ldir
+    ret
+
+.cmd:
+    db (.len - 1)
+    db 'SUBMIT PROFILE'
+.end
+.len = $ - .cmd
+    endmodule
