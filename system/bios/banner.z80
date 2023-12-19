@@ -7,5 +7,5 @@ banner:
     db 13,10 
     db "System built: ", __DATE__,' ',__TIME__, ' '
     incbin 'git_commit'
-    db 10
+    db 13
     db #ff

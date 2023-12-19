@@ -1,6 +1,8 @@
 # Future release
  - ZCPR is no longer blob. Sources are included
  - Autoexec via submit
+ - Any order of volumes are acceptable
+ 
 
 # 2023.12.11
  - Memory usage optimised 

@@ -14,17 +14,16 @@ init:
     ld a, 0 : ld (Disk.cur_drive), a
 .loop
     ld a, (Disk.cur_drive) : cp MAX_VOLUMES : ret z 
-
-    push hl
+    ;; Slower but any order is OK now :-)
+    call load_part_table
     ld iy, partition : call find_partition : jr nz, .notFound
 
     ld hl, Disk.cur_drive : inc (hl)
     ld hl, part_letter : inc (hl)
-    pop hl 
+
     jr .loop
 
 .notFound:
-    pop hl
     ret
 .error1
     ld hl, .error1msg
