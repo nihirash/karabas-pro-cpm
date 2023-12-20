@@ -3,6 +3,7 @@ cpm.\$c
 cpm.rom
 cpm.trd
 cpm.sys
+autoexec.com
 .DS_Store
 *.zx7
 page*.bin

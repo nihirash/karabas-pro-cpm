@@ -36,8 +36,6 @@ SECTRN:	JP	Disk.sectran
     display "boot ends ", $
     include "uart/uart.z80"
     display "uart ends ", $
-    include "autoexec.z80"
-    display "Autoexec ends: ", $ 
 
     module BIOS
 

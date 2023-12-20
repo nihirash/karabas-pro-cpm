@@ -22,8 +22,24 @@ boot:
     ld c, 0 : call SELDSK
     xor a : ld (TDRIVE), a
 
-    call Autoexec.try
-    jr wboot.skip_move
+    ld a, PAGE_OFFLOAD : call Memory.setPage
+    ld hl, Autoexec.start
+    ld de, $100
+    ld bc, Autoexec.len
+    ldir
+    ld a, PAGE_USER : call Memory.setPage
+ 
+    call init_entry
+
+    call BIOS.install_int
+
+    call HOME
+    im 1
+
+    ld sp, cpm_start - 1
+    xor a
+    ld (TDRIVE), a
+    jp $100
 wboot:
     di
     ld sp, #ffff
@@ -33,23 +49,14 @@ wboot:
     ld de, CBASE
     ld bc, FBASE-CBASE
     ldir
-.skip_move:
+
     ld a, PAGE_USER : call Memory.setPage
     
-    ; Setup jump table
-    ld a, #c3
-    ld (0), a
-    ld hl, WBOOT
-    ld (1), hl
-    
-    ld (5), a
-    ld hl, FBASE 
-    ld (6), hl
+    call init_entry
 
     ld bc, #80
     call SETDMA
     
-    ld a, 1 : ld (IOBYTE),a
     call BIOS.install_int
 
     call HOME
@@ -63,6 +70,19 @@ wboot:
     ei
     jp CBASE
 
+init_entry:
+    ; Setup jump table
+    ld a, #c3
+    ld (0), a
+    ld hl, WBOOT
+    ld (1), hl
+    
+    ld (5), a
+    ld hl, FBASE 
+    ld (6), hl
+
+    ld a, 1 : ld (IOBYTE),a
+    ret
 
 show_banner:
     ld hl, banner
