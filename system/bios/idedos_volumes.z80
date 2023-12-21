@@ -26,10 +26,18 @@ init:
 .notFound:
     ret
 .error1
+    ld a, (Drive.slot) : cp Drive.slot2 : jr z, .swap_sd
+    
+    ld a, Drive.slot2 : ld (Drive.slot), a
+    jr init
+
+.swap_sd
+    ld a, Drive.slot1 : ld (Drive.slot), a
     ld hl, .error1msg
     call BIOS.bios_print
 .wait_key
     xor a : in a, (#fe)  : cpl : and 31 : jr z, .wait_key
+
     call Drive.init
     ld hl, 0 : ld (part_table_offset), hl
     

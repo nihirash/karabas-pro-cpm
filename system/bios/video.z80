@@ -176,6 +176,9 @@ cursor_left:
 ; Not too clear but 
 clear_line:
     ld de, (coords)
+    ;; One character left before cleaning up :-) 
+    ld a, e : and a : jr z, .loop
+    dec e
 .loop
     ld a, 84
     cp e : ret z

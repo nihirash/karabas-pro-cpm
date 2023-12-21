@@ -3,6 +3,8 @@
 mmc_en = #e7
 mmc_data = #eb
 slot1 = #fe
+slot2 = #fd
+both_slots = #fc
 disable_mmc = #ff
     endif
 
@@ -10,6 +12,8 @@ disable_mmc = #ff
 mmc_en = #77
 mmc_data = #57
 slot1 = #1
+slot2 = #11
+both_slots = #9
 disable_mmc = #3
     endif
 
@@ -26,6 +30,12 @@ ACMD_41   EQU 0x69   ;SD_SEND_OP_COND
     macro mmc_cs_en
         push af
         ld a, slot1 : out (mmc_en), a
+        pop af
+    endm
+
+    macro mmc_cs_en_ops
+        push af
+        ld a, (slot) : out (mmc_en), a
         pop af
     endm
 
@@ -92,7 +102,7 @@ secm200:
     ld h, b 
     ld l, c
     ld bc, mmc_data
-    mmc_cs_en
+    mmc_cs_en_ops
     ld a, 00
 blsize = $ - 1
     or a
@@ -140,6 +150,7 @@ write:
     call in_oout 
     inc a
     jr nz, .wait1
+    
     ld a, #fe : ld bc, mmc_data : out (c), a : nop
     ld b, #80 : otir : nop
     ld b, #80 : otir : nop
@@ -195,6 +206,7 @@ in_oout:
     pop de
     ret
 
+slot    db slot1
 
 CMD00    db  0x40,0x00,0x00,0x00,0x00,0x95 ;GO_IDLE_STATE
 CMD08    db  0x48,0x00,0x00,0x01,0xAA,0x87 ;SEND_IF_COND
