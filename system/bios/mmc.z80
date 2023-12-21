@@ -11,9 +11,9 @@ disable_mmc = #ff
     ifdef ZC_MMC
 mmc_en = #77
 mmc_data = #57
-slot1 = #1
+slot1 = #01
 slot2 = #0B
-both_slots = #9
+both_slots = #09
 disable_mmc = #3
     endif
 
@@ -29,7 +29,7 @@ ACMD_41   EQU 0x69   ;SD_SEND_OP_COND
 
     macro mmc_cs_en
         push af
-        ld a, slot1 : out (mmc_en), a
+        ld a, both_slots : out (mmc_en), a
         pop af
     endm
 
