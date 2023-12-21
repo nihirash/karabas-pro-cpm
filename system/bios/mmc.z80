@@ -29,14 +29,7 @@ ACMD_41   EQU 0x69   ;SD_SEND_OP_COND
 
     macro mmc_cs_en
         push af
-        ld a, both_slots : out (mmc_en), a
-        pop af
-    endm
-
-    macro mmc_cs_en_ops
-        push af
         ld a, (slot) : out (mmc_en), a
-        out (#fe), a
         pop af
     endm
 
@@ -103,7 +96,7 @@ secm200:
     ld h, b 
     ld l, c
     ld bc, mmc_data
-    mmc_cs_en_ops
+    mmc_cs_en
     ld a, 00
 blsize = $ - 1
     or a
