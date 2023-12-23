@@ -14,9 +14,8 @@ boot:
     ldir
 
     ld a, PAGE_USER : call Memory.setPage
-    call Drive.init
-
     call show_banner
+    call Drive.init_all
     call IDEDOS_Volumes.init    
 
     ld c, 0 : call SELDSK

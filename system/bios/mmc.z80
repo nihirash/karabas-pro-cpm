@@ -4,7 +4,6 @@ mmc_en = #e7
 mmc_data = #eb
 slot1 = #fe
 slot2 = #fd
-both_slots = #fc
 disable_mmc = #ff
     endif
 
@@ -13,7 +12,6 @@ mmc_en = #77
 mmc_data = #57
 slot1 = #01
 slot2 = #0B
-both_slots = #09
 disable_mmc = #3
     endif
 
@@ -38,19 +36,26 @@ ACMD_41   EQU 0x69   ;SD_SEND_OP_COND
         ld a, disable_mmc : out (mmc_en), a
         pop af
     endm
-
+init_all:
+    ld a, slot2 : ld (slot), a : call init
+    ld a, slot1 : ld (slot), a 
 init:
     mmc_cs_dis
-    ld bc, mmc_data
+    ld c, mmc_data
     ld de, #20FF        ; Just flush all data from SD buffer
 .init_loop
     out (c), e
     dec d
     jr nz, .init_loop
+
+    ld hl, #7ff : ld (.counter), hl
 .zaw001
+    ld hl, (.counter) : dec hl : ld (.counter), hl : ld a, l : or h : jp z, init.fall_off
+
     ld hl, CMD00 : call outcom : call in_oout
     dec a
     jr  nz, .zaw001 ; If response not eq 1 - retry
+
     ld hl, CMD08 : call outcom : call in_oout
     dup 4
     in h, (c) : nop ; We don't care about result 
@@ -79,7 +84,7 @@ init:
     call in_oout : and a
     jr nz, .zaw005
 
-    ld a, CMD_58 : ld bc, mmc_data
+    ld a, CMD_58 : ld c, mmc_data
     call out_com : call in_oout
     in a, (c) : nop
     in h, (c) : nop
@@ -88,14 +93,29 @@ init:
     and #40
     ld (blsize), a
     mmc_cs_dis
+
+    ld a, 1 : ld (success), a
     ret
+.fall_off:
+    mmc_cs_dis
+
+    ld b, #ff
+1
+    in  a, (mmc_data) ;; Flush buffer
+    djnz 1b
+
+    xor a : ld (success), a
+    ret
+
+.counter dw 0
+
 
 secm200:
     push hl
     push af
     ld h, b 
     ld l, c
-    ld bc, mmc_data
+    ld c, mmc_data
     mmc_cs_en
     ld a, 00
 blsize = $ - 1
@@ -169,10 +189,8 @@ outcom:
 
 
 out_com:
-    push af
     mmc_cs_en
-    pop af
-    ld bc, mmc_data
+    ld c, mmc_data
     in (c)
     in (c)
     out (c), a
@@ -187,9 +205,12 @@ out_com:
 in_oout:
     di
     push de
+    ld   b, #ff
     ld   de, #20ff
-    ld    b, mmc_data
+    ld   c, mmc_data
 .in_wait
+    dec b : jr z, .in_exit
+
     in a, (c)
     cp e
     jr nz, .in_exit
@@ -200,6 +221,7 @@ in_oout:
     pop de
     ret
 
+success db 0
 slot    db slot1
 
 CMD00    db  0x40,0x00,0x00,0x00,0x00,0x95 ;GO_IDLE_STATE
