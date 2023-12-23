@@ -1,7 +1,2 @@
-    ifdef ZXUNO_UART
     include "zxuno.z80"
-    endif
-
-    ifdef ZIFI_UART
     include "zifi.z80"
-    endif

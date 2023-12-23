@@ -1,7 +1,4 @@
-;; Looks like broken.
-;; Better use ZiFi's one
-
-    module Uart
+    module Uart2
 UART_DATA_REG = #c6
 UART_STAT_REG = #c7
 UART_BYTE_RECIVED = #80
@@ -19,85 +16,30 @@ init:
     ret
 
 read:
-    call uartRead
-    jr nc, read
+    ld bc, ZXUNO_ADDR : ld a, UART_STAT_REG : out (c), a
+    ld bc, ZXUNO_REG 
+.status
+    in a, (c) : or a
+    jp m, .status
+
+    ld bc, ZXUNO_ADDR : ld a, UART_DATA_REG : out (c), a
+    ld bc, ZXUNO_REG : in A, (c)
     ret
 
 write:
-    LOCAL_STACK
-
-    push bc
-    ld bc, ZXUNO_ADDR : ld a, UART_STAT_REG : out (c), a
-    ld bc, ZXUNO_REG : in A, (c) : and UART_BYTE_RECIVED
-    jr nz, .is_recvF
+    ld e, c
 .checkSent
     ld bc, ZXUNO_REG : in A, (c) : and UART_BYTE_SENDING
     jr nz, .checkSent
 
-    ld bc, ZXUNO_ADDR : ld a, UART_DATA_REG : out (c), a
-
-    ld bc, ZXUNO_REG : pop de : out (c), e
-    
-    RESTORE_STACK
+    ld bc, ZXUNO_ADDR : ld a, UART_DATA_REG : out (c), e
     ret
-.is_recvF
-    push af : push hl
-    ld hl, is_recv : ld a, 1 : ld (hl), a 
-    
-    pop hl : pop af
-    jr .checkSent
 
 status:
-    ld a, (poked_byte) : or a : jr nz, .yes
-    ld a, (is_recv) : or a : jr nz, .yes
-
     ld bc, ZXUNO_ADDR : ld a, UART_STAT_REG : out (c), a
     ld bc, ZXUNO_REG : in a, (c) : and UART_BYTE_RECIVED
-    jr nz, .yes
-    xor a : ret
-.yes
+    ret z
     ld a, #ff
     ret
-    
-; Read byte from UART
-; A: byte
-uartRead:
-    ld a, (poked_byte) : and 1 : jr nz, .retBuff
-
-    ld a, (is_recv) : and 1 : jr nz, recvRet
-
-    ld bc, ZXUNO_ADDR : ld a, UART_STAT_REG : out (c), a
-    ld bc, ZXUNO_REG : in a, (c) : and UART_BYTE_RECIVED
-    jr nz, retReadByte
-
-    or a
-    ret
-.retBuff
-    ld a, 0 : ld (poked_byte), a : ld a, (byte_buff)
-    scf 
-    ret
-
-retReadByte:
-    xor a : ld (poked_byte), a : ld (is_recv), a
-
-    ld bc, ZXUNO_ADDR : ld a, UART_DATA_REG : out (c), a
-    ld bc, ZXUNO_REG : in a, (c)
-
-    scf
-    ret
-
-recvRet:
-    ld bc, ZXUNO_ADDR : ld a,  UART_DATA_REG : out (c),a
-
-    ld bc, ZXUNO_REG : in a, (c)
-    ld hl, is_recv : ld (hl), 0
-    ld hl, poked_byte : ld (hl), 0
-    
-    scf
-    ret
-
-poked_byte  db 0
-byte_buff   db 0
-is_recv     db 0
 
     endmodule

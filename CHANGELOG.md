@@ -3,6 +3,7 @@
  - Autostart commands can be specified via PROFILE.SUB file
  - Any order of volumes are acceptable
  - Two SD cards are supported(implemented in compatible way with Z-Controller on ZXEvo TSConf)
+ - ZXUno's UART accessable via IOBYTE(UC1 device)
 
 # 2023.12.11
  - Memory usage optimised 
