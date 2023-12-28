@@ -9,31 +9,41 @@ IDEDOS_PE_END_HEAD        equ 0x16
 
 init:
     di
+    call Drive.init : ld a, (Drive.success) : or a : jp z, .error1
+
     call load_part_table : jp nz, .error1
     ld hl, (part_table_offset)
     ld a, 0 : ld (Disk.cur_drive), a
 .loop
     ld a, (Disk.cur_drive) : cp MAX_VOLUMES : ret z 
-
-    push hl
+    ;; Slower but any order is OK now :-)
+    call load_part_table
     ld iy, partition : call find_partition : jr nz, .notFound
 
     ld hl, Disk.cur_drive : inc (hl)
     ld hl, part_letter : inc (hl)
-    pop hl 
+
     jr .loop
 
 .notFound:
-    pop hl
     ret
 .error1
+    ld a, (Drive.slot) : cp Drive.slot2 : jr z, .swap_sd
+    
+    ld hl, 0 : ld (part_table_offset), hl
+    ld a, Drive.slot2 : ld (Drive.slot), a
+
+    jr init
+
+.swap_sd
+    ld a, Drive.slot1 : ld (Drive.slot), a
     ld hl, .error1msg
     call BIOS.bios_print
 .wait_key
     xor a : in a, (#fe)  : cpl : and 31 : jr z, .wait_key
-    call Drive.init
     ld hl, 0 : ld (part_table_offset), hl
     
+    call Drive.init_all
     jr init
 
 .error1msg

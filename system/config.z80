@@ -1,6 +1,4 @@
-    DEFINE BASE_ADDRESS #D000   ; Address where CCP will live, start of OS code
+    DEFINE BASE_ADDRESS #CF00   ; Address where CCP will live, start of OS code
     DEFINE  ZC_MMC              ; ZC controller for MMC operations
 ;   DEFINE  DIVMMC              ; DIVMMC for MMC operations
-    DEFINE  ZIFI_UART           ; ZiFi-compatible UART 
-;   DEFINE  ZXUNO_UART          ; ZXUno-compatible UART
     DEFINE  MAX_VOLUMES 11      ; How many +3E Volumes will be used as drives

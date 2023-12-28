@@ -1,17 +1,20 @@
     module Console
 status:
     ld a, (IOBYTE) : and 3
-    jp nz, Keyboard.read_status
-    jp Uart.status
+    jp z, Uart.status
+    cp 3 : jp z, Uart.status
+    jp Keyboard.read_status
 
 in:
     ld a, (IOBYTE) : and 3
-    jp nz, Keyboard.read
-    jp Uart.read
+    jp z, Uart.read
+    cp 3 : jp z, Uart.read
+    jp Keyboard.read
 
 out:
     ld a, (IOBYTE) : and 3
-    jp nz, Display.write
-    jp Uart.write
+    jp z, Uart.write
+    cp 3 : jp z, Uart.write
+    jp Display.write
 
     endmodule

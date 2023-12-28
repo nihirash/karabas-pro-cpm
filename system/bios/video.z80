@@ -98,10 +98,17 @@ _esc:
     cp '=' : jr z, .load_coords
     cp 'c' : jr z, .load_col
     cp 'b' : jr z, .load_back
+    cp #ff : jr z, .quick
+    cp #fe : jr z, .slow
     
 ;; Not parsed ESC code
-    xor a : ld (putc_fsm), a
-    ret
+    jr exit_fsm
+.quick:
+    ld a, $c9 : ld (quick_toggle), a
+    jr exit_fsm
+.slow:
+    ld a, 0 : ld (quick_toggle), a
+    jr exit_fsm
 .load_col
     ld a, FSM_LOADC : ld (putc_fsm), a
     ret
@@ -176,6 +183,9 @@ cursor_left:
 ; Not too clear but 
 clear_line:
     ld de, (coords)
+    ;; One character left before cleaning up :-) 
+    ld a, e : and a : jr z, .loop
+    dec e
 .loop
     ld a, 84
     cp e : ret z
@@ -480,6 +490,9 @@ basic_draw:
     inc iyh
     inc de
     djnz .printIt
+quick_toggle:
+    nop
+
 ; Draw attribute :-)
     ld a, PAGE_ATTR : call Memory.setPage
     ld a, (coords) : ld b, a

@@ -1,5 +1,5 @@
 name: build-check
-run-name: Build operating system with sjasmplus
+run-name: Dry run of building and packing OS image
 on: 
     push:
         branches:

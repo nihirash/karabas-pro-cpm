@@ -10,79 +10,88 @@ _loadb_table db 000o, 010o, 020o, 030o, 040o, 050o, 060o, 070o, 200o, 210o, 220o
     endmodule
 
     module Keyboard            
-Keyboard_Map:           DB 0x00,"z","x","c","v"
+Keyboard_Map:           DB $00,"z","x","c","v"
                         DB "a","s","d","f","g"
                         DB "q","w","e","r","t"
                         DB "1","2","3","4","5"
                         DB "0","9","8","7","6"
                         DB "p","o","i","u","y"
                         DB CR,"l","k","j","h"
-                        DB " ",0x00,"m","n","b"                                            
-Keyboard_Map_CS:        DB 0x00,"Z","X","C","V"
+                        DB " ",$00,"m","n","b"                                            
+Keyboard_Map_CS:        DB $00,"Z","X","C","V"
                         DB "A","S","D","F","G"
                         DB "Q","W","E","R","T"
-                        DB BS,CAPS,0x00,0x00,0x08
-                        DB DEL,TAB,0x0c,0x0b,0x0a
+                        DB BS,CAPS,$00,$00,$08
+                        DB DEL,TAB,$0c,$0b,$0a
                         DB "P","O","I","U","Y"
                         DB CR,"L","K","J","H"
-                        DB ESC,0x00,"M","N","B"
-Keyboard_Map_SS:        DB 0x00,":","$","?","/"
+                        DB ESC,$00,"M","N","B"
+Keyboard_Map_SS:        DB $00,":","$","?","/"
                         DB '~','|','\','{','}'
-                        DB 0x00,'{','}',"<",">"
+                        DB $00,'{','}',"<",">"
                         DB "!","@","#","$","%"
                         DB "_",")","(","'","&"
-                        DB "\"",";",0x00,']','['
+                        DB "\"",";",$00,']','['
                         DB CR,"=","+","-","^"
-                        DB " ",0x00,".",",","*"
+                        DB " ",$00,".",",","*"
 Keyboard_Map_CSSS:      
-                        DB 0x00,CNTRLZ,CNTRLX,CNTRLC,0x16
-                        DB 0x01,CNTRLS,0x04,0x06,0x07
-                        DB 0x11,0x17,CNTRLE,CNTRLR,0x14
-                        DB DEL,0x00,0x00,0x00,0x00
-                        DB BS,0x00,TAB,0x00,0x00
-                        DB CNTRLP,0x0f,0x09,CNTRLU,0x19
-                        DB CR,0x0c,0x0b,0x0a,0x08
-                        DB " ",0x00,0x0d,0x0e,0x02
-Keyboard_Map_CL:        DB 0x00,"Z","X","C","V"
+                        DB $00,CNTRLZ,CNTRLX,CNTRLC,$16
+                        DB $01,CNTRLS,$04,$06,$07
+                        DB $11,$17,CNTRLE,CNTRLR,$14
+                        DB DEL,$00,$00,$00,$00
+                        DB BS,$00,TAB,$00,$00
+                        DB CNTRLP,$0f,$09,CNTRLU,$19
+                        DB CR,$0c,$0b,$0a,$08
+                        DB " ",$00,$0d,$0e,$02
+Keyboard_Map_CL:        DB $00,"Z","X","C","V"
                         DB "A","S","D","F","G"
                         DB "Q","W","E","R","T"
                         DB "1","2","3","4","5"
                         DB "0","9","8","7","6"
                         DB "P","O","I","U","Y"
                         DB CR,"L","K","J","H"
-                        DB " ",0x00,"M","N","B"
-Keyboard_Map_CL_CS:     DB 0x00,"Z","X","C","V"
+                        DB " ",$00,"M","N","B"
+Keyboard_Map_CL_CS:     DB $00,"Z","X","C","V"
                         DB "A","S","D","F","G"
                         DB "Q","W","E","R","T"
-                        DB BS,CAPS,0x00,0x00,0x08
-                        DB DEL,TAB,0x0c,0x0b,0x0a
+                        DB BS,CAPS,$00,$00,$08
+                        DB DEL,TAB,$0c,$0b,$0a
                         DB "P","O","I","U","Y"
                         DB CR,"L","K","J","H"
-                        DB ESC,0x00,"M","N","B"
-Keyboard_Map_CL_SS:        DB 0x00,":","$","?","/"
+                        DB ESC,$00,"M","N","B"
+Keyboard_Map_CL_SS:        DB $00,":","$","?","/"
                         DB '~','|','\','{','}'
-                        DB 0x00,'{','}',"<",">"
+                        DB $00,'{','}',"<",">"
                         DB "!","@","#","$","%"
                         DB "_",")","(","'","&"
-                        DB "\"",";",0x00,']','['
+                        DB "\"",";",$00,']','['
                         DB CR,"=","+","-","^"
-                        DB " ",0x00,".",",","*"
+                        DB " ",$00,".",",","*"
 Keyboard_Map_CL_CSSS:   
-                        DB 0x00,CNTRLZ,CNTRLX,CNTRLC,0x16
-                        DB 0x01,CNTRLS,0x04,0x06,0x07
-                        DB 0x11,0x17,CNTRLE,CNTRLR,0x14
-                        DB DEL,0x00,0x00,0x00,0x00
-                        DB BS,0x00,TAB,0x00,0x00
-                        DB CNTRLP,0x0f,0x09,CNTRLU,0x19
-                        DB CR,0x0c,0x0b,0x0a,0x08
-                        DB " ",0x00,0x0d,0x0e,0x02    
+                        DB $00,CNTRLZ,CNTRLX,CNTRLC,$16
+                        DB $01,CNTRLS,$04,$06,$07
+                        DB $11,$17,CNTRLE,CNTRLR,$14
+                        DB DEL,$00,$00,$00,$00
+                        DB BS,$00,TAB,$00,$00
+                        DB CNTRLP,$0f,$09,CNTRLU,$19
+                        DB CR,$0c,$0b,$0a,$08
+                        DB " ",$00,$0d,$0e,$02    
     endmodule
 offload_end:
 
 display_offset_table:
-    ds 2*240
+    ds 2*240, $ff
 
 ccp_backup:
-    ds FBASE-CBASE
+    ds FBASE-CBASE, $ff
+
+;; Autoexec module
+    module Autoexec
+start:
+    incbin "../autoexec.com"
+len = $ - start
+    endmodule
+
     assert $ < $8000
+    display "Offload page free space: ", $8000 - $
     ENT

@@ -72,3 +72,4 @@ old_sp:
     endmodule
     
     include "drive_buffers.z80"
+    include "banner.z80"

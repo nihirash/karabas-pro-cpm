@@ -9,9 +9,29 @@ ZIFI_FIFO_OUT = #C1EF
 ZIFI_CMD_CLEAR_FIFO_IN = #01
 ZIFI_CMD_CLEAR_FIFO_OUT = #02
 ZIFI_CMD_CLEAR_FIFO_BOTH = #03
+ZIFI_SELECT_FIRST_UART = #04
+ZIFI_SELECT_SECOND_UART = #05
 ZIFI_CMD_API_DISABLE = #F0
 ZIFI_CMD_API_ENABLE = #F1
 ZIFI_CMD_API_VERSION = #FF
+
+    macro iobyte_switch
+    ld a, (active_uart) : ld c, a
+    ld a, (IOBYTE) : and 3
+    cp c : ld (active_uart), a
+    jr z, 3f
+    
+    and 3
+    jr nz, 1f
+
+    ld a, ZIFI_SELECT_FIRST_UART
+    jr 2f 
+1
+    ld a, ZIFI_SELECT_SECOND_UART
+2
+    ld bc, ZIFI_CMD_REG : out (c), a
+3
+    endm
 
 init:
     ld bc, ZIFI_CMD_REG : ld a, ZIFI_CMD_API_ENABLE : out (c), a
@@ -19,12 +39,16 @@ init:
     ret
 
 status:
+    iobyte_switch
+
     ld bc, ZIFI_FIFO_IN : in a, (c)
     ret z
     ld a, #ff
     ret
 
 read:
+    iobyte_switch
+
     ld bc, ZIFI_FIFO_IN 
 1
     in a, (c) 
@@ -33,8 +57,11 @@ read:
     ret
 
 write:
-    ld a, c
-    ld bc, ZIFI_DATA_REG : out (c), a
+    ld e, c
+    iobyte_switch
+    ld bc, ZIFI_DATA_REG : out (c), e
     ret
 
+
+active_uart db #ff
     endmodule
