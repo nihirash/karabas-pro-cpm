@@ -6,7 +6,6 @@ boot:
 
     call Display.init
     call Uart.init
-    call Uart2.init
 
     ld a, PAGE_OFFLOAD : call Memory.setPage
     ld hl, CBASE
